@@ -6,8 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
+// creo la classe Utente con i relativi attributi
+// uso lombok per generare i getter e i setter e il costruttore vuoto ma non il costruttore con tutti i parametri
+// o il toString per evitare conflitti
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,6 +31,10 @@ public class Utente {
     private String cognome;
     @Column(nullable = false)
     private String email;
+
+    // creo la relazione OneToMany tra Utente e Prenotazione
+    @OneToMany(mappedBy = "utente")
+    private List<Prenotazione> listaPrenotazioni;
 
     public Utente(String cognome, String email, String nome, String username) {
         this.cognome = cognome;

@@ -6,8 +6,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
 import java.util.UUID;
 
+// creo la classe Edificio con i relativi attributi
+// uso lombok per generare i getter e i setter e il costruttore vuoto ma non il costruttore con tutti i parametri
+// o il toString per evitare conflitti
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,6 +29,10 @@ public class Edificio {
     private String indirizzo;
     @Column(nullable = false)
     private String città;
+
+    // creo la relazione OneToMany tra Edificio e Postazione
+    @OneToMany(mappedBy = "edificio")
+    private List<Postazione> listaPostazioni;
 
     public Edificio(String città, String nome, String indirizzo) {
         this.città = città;
