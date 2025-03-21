@@ -39,5 +39,6 @@ public class UtentiRunner implements CommandLineRunner {
 //            log.error(e.getMessage());
 //        }
 
+
     }
 }

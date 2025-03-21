@@ -16,8 +16,13 @@ public class PrenotazioniService {
     @Autowired
     private PrenotazioniRepository prenotazioniRepository;
 
+    // creo un metodo per trovare tutte le prenotazioni
+    public List<Prenotazione> recuperaPrenotazioni() {
+        return prenotazioniRepository.findAll();
+    }
+
     // creo un metodo per salvare una nuova prenotazione
-    private void savePrenotazione(Prenotazione nuovaPrenotazione) {
+    public void salvaPrenotazione(Prenotazione nuovaPrenotazione) {
 
         if (prenotazioniRepository.existsByPostazioneAndData(nuovaPrenotazione.getPostazione(), nuovaPrenotazione.getData())) {
             // se la postazione è già prenotata per la data richiesta, lancio un'eccezione
@@ -44,10 +49,11 @@ public class PrenotazioniService {
     public void salvaMoltePrenotazioni(List<Prenotazione> nuovePrenotazioni) {
         for (Prenotazione prenotazione : nuovePrenotazioni) {
             try {
-                this.savePrenotazione(prenotazione);
+                this.salvaPrenotazione(prenotazione);
             } catch (ValidationException ex) {
                 log.error(ex.getMessage());
             }
         }
+
     }
 }

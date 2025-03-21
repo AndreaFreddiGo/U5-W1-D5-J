@@ -33,16 +33,19 @@ public class PostazioniRunner implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Faker faker = new Faker(Locale.ITALY);
 
+        // cerco in modo random di scegliere il tipo di postazione
+        List<String> nomiPostazione = new ArrayList<>(Arrays.asList("Area", "Spazio", "Postazione", "Sala"));
+        Tipo tipo = Tipo.values()[faker.random().nextInt(Tipo.values().length)];
+
+        // scelgo un nome casuale
+        String descrizione = nomiPostazione.get(faker.random().nextInt(nomiPostazione.size()));
+
+        // recupero un edificio casuale
+        List<Edificio> edifici = edificiService.recuperaEdifici();
+        Edificio edificioCasuale = edifici.get(faker.random().nextInt(edifici.size()));
+
         List<Postazione> nuovePostazioni = new ArrayList<>();
         for (int i = 0; i < 100; i++) {
-            // cerco in modo random di scegliere il tipo di postazione
-            List<String> nomiPostazione = new ArrayList<>(Arrays.asList("Area", "Spazio", "Postazione", "Sala"));
-            Tipo tipo = Tipo.values()[faker.random().nextInt(Tipo.values().length)];
-            // scelgo un nome casuale
-            String descrizione = nomiPostazione.get(faker.random().nextInt(nomiPostazione.size()));
-            // recupero un edificio casuale
-            List<Edificio> edifici = edificiService.recuperaEdifici();
-            Edificio edificioCasuale = edifici.get(faker.random().nextInt(edifici.size()));
             Postazione nuovaPostazione = new Postazione(descrizione + " " + faker.job().field(), edificioCasuale, faker.random().nextInt(20, 100), tipo);
             nuovePostazioni.add(nuovaPostazione);
         }
@@ -53,5 +56,17 @@ public class PostazioniRunner implements CommandLineRunner {
 //        } catch (Exception ex) {
 //            log.error(ex.getMessage());
 //        }
+
+        // recupero tutte le città in cui ci sono edifici in modo da poterne inserire una nel metodo sottostante
+        List<String> città = edificiService.recuperaEdifici().stream().map(Edificio::getCittà).distinct().toList();
+
+        // recupero le postazioni in base a tipo e città
+        List<Postazione> postazioni = postazioniService.trovaPostazioniPerTipoECittà(tipo, città.get(faker.random().nextInt(città.size())));
+        if (postazioni.isEmpty()) {
+            log.error("Nessuna postazione trovata con i parametri specificati");
+        } else {
+            postazioni.forEach(System.out::println);
+        }
+
     }
 }

@@ -22,7 +22,7 @@ public class UtentiService {
     }
 
     // creo un metodo per salvare un nuovo utente
-    private void salvaUtente(Utente nuovoUtente) {
+    public void salvaUtente(Utente nuovoUtente) {
         // prima faccio un controllo su username e email per essere certo che l'utente non esista già
         if (utentiRepository.existsByUsername(nuovoUtente.getUsername()))
             throw new ValidationException("Username già esistente");
